@@ -47,11 +47,14 @@ void mem_for_cmd(t_shell *shell, char **argv, int len, int i, int index)
 {
 	int i_cmd = 0;
 
-
+	if(!argv[i + 1] && strcmp(argv[i], "|") != 0 && strcmp(argv[i], ";") != 0)
+			i++;
 	while(len)
 	{
 		printf("len  -> %d | argv[i - 1] -> %s | len_cmd -> %d\n", len -1, argv[i - 1], ft_strlen(argv[i -1]) + 1);
-		shell[index].cmd[len - 1] = malloc(sizeof(char) * (ft_strlen(argv[i - 1]) + 1));
+		//shell[index].cmd[len - 1] = malloc(sizeof(char) * (ft_strlen(argv[i - 1]) + 1));
+		shell[index].cmd[len - 1] = strdup(argv[i - 1]);
+		printf("Valeur copier -> %s\n", shell[index].cmd[len - 1]);
 		i_cmd++;
 		len--;
 		i--;
@@ -97,4 +100,6 @@ int main(int argc, char **argv, char **envp)
 	printf("L'alloc de mem est egal a -> %d\n", mem_struct(argc, argv));
 	shell = malloc(sizeof(t_shell) * (mem_struct(argc, argv)));
 	mem_for_shell(shell, argv, argc);
+
+	//Print la struct final.
 }
