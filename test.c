@@ -115,7 +115,6 @@ void mem_for_shell(t_shell *shell, char **argv, int argc)
 	return ;
 }
 
-
 void print_struct(t_shell *shell, int mem)
 {
 	int i = 0;
@@ -143,7 +142,6 @@ void print_struct(t_shell *shell, int mem)
 			j++;
 		}
 		printf("shell[%d].id = %d \n", i, shell[i].id);
-		printf("shell[%d].pipe_needed = %d \n", i, shell[i].pipe_needed);
 		i++;
 	}
 }
@@ -153,20 +151,6 @@ void exec_nothing(t_shell *shell, char **envp, int i)
 	execve(shell[i].cmd[0], shell[i].cmd, envp);
 }
 
-
-void exec_more(t_shell *shell, char **envp, int i)
-{
-	pid_t pid;
-	int status;
-
-	pid = fork();
-	if(pid == 0)
-		execve(shell[i].cmd[0], shell[i].cmd, envp);
-	else
-		waitpid(-1, &status, 0);
-	return ;
-
-}
 
 void exec_pipe(t_utils *utils, t_shell *shell, char **envp, int i, int pipe_needed)
 {
@@ -235,33 +219,19 @@ void exec_pipe(t_utils *utils, t_shell *shell, char **envp, int i, int pipe_need
 }
 
 
-
-void execution(t_utils *utils, t_shell *shell, char **envp, int mem)
+void exec_more(t_shell *shell, char **envp, int i)
 {
-	int	i = 0;
-	
-	if(!shell)
-		return ;
-	while (i < mem)
-	{
-		if(!shell[i].cmd)
-			return ;
-		// \0
-		else if(shell[i].id == 0)
-			exec_nothing(shell, envp, i);
-		// |
-		else if(shell[i].id == 1)
-			exec_pipe(utils, shell, envp, i, shell[i].pipe_needed);
-		// ;
-		else if(shell[i].id == 2)
-			exec_more(shell, envp, i);
-		i++;
-	}
-	
+	pid_t pid;
+	int status;
+
+	pid = fork();
+	if(pid == 0)
+		execve(shell[i].cmd[0], shell[i].cmd, envp);
+	else
+		waitpid(-1, &status, 0);
+	return ;
 
 }
-
-
 int main(int argc, char **argv, char **envp)
 {
 	// Declarer et initier la struct
@@ -284,3 +254,4 @@ int main(int argc, char **argv, char **envp)
 	execution(utils, shell, envp, mem);
 	free(utils);
 }
+
