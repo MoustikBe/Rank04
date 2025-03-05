@@ -10,7 +10,6 @@ typedef struct t_shell
 	char 	**cmd;
 	int		id;
 	int		pipe_before;
-	int		pipe_after;
 	int 	prev_fd;
 	int		pipe_fd[2];
 }	t_shell;
