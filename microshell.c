@@ -11,7 +11,6 @@ typedef struct t_shell
 	int		id;
 	int		pipe_before;
 	int 	prev_fd;
-	int		pipe_fd[2];
 }	t_shell;
 
 int ft_strlen(char *cmd)
@@ -164,8 +163,10 @@ void exec(t_shell *shell, char **envp)
     {
         // Si la commande doit envoyer sa sortie dans un pipe,
         // créez le pipe avant le fork.
-        if(shell[i].id == 1) {
-            if (pipe(fd) == -1) {
+        if(shell[i].id == 1) 
+		{
+            if (pipe(fd) == -1) 
+			{
                 perror("pipe");
                 exit(EXIT_FAILURE);
             }
